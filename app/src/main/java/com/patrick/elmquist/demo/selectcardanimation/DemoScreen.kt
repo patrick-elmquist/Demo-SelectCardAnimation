@@ -8,12 +8,10 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -110,7 +107,7 @@ internal fun DemoScreen(cards: List<CardModel>) {
         cardsAndOffsets.entries.forEachIndexed { i, (model, offset) ->
             Card(
                 model = model,
-                isSelected = selectedIndex.index != i,
+                showDetails = selectedIndex.index != i,
                 onClick = {
                     selectedIndex = if (selectedIndex.index == i) {
                         SelectedIndex.NotSelected
@@ -175,7 +172,7 @@ private fun CoroutineScope.animateToDefaultPosition(
 @Composable
 private fun Card(
     model: CardModel,
-    isSelected: Boolean,
+    showDetails: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -191,7 +188,7 @@ private fun Card(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 val smallImage = Modifier.padding(end = 12.dp).size(24.dp)
-                AnimatedVisibility(isSelected) {
+                AnimatedVisibility(showDetails) {
                     if (LocalInspectionMode.current) {
                         Box(modifier = smallImage.background(color = Color.LightGray))
                     } else {
@@ -211,10 +208,10 @@ private fun Card(
             }
             val modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .aspectRatio(1f)
-                .fillMaxWidth()
                 .padding(horizontal = 24.dp)
                 .padding(bottom = 24.dp)
+                .aspectRatio(1f)
+                .fillMaxWidth()
             if (LocalInspectionMode.current) {
                 Box(modifier = modifier.background(color = Color.LightGray))
             } else {
