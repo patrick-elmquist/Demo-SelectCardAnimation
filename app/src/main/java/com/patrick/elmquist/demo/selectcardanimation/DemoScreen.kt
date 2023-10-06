@@ -7,8 +7,6 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -160,7 +157,6 @@ private fun CoroutineScope.animateToDefaultPosition(
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 private fun Card(
     text: String,
@@ -169,10 +165,7 @@ private fun Card(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = color,
-//            contentColor = Color.White,
-        ),
+        colors = CardDefaults.cardColors(containerColor = color),
         elevation = CardDefaults.elevatedCardElevation(24.dp),
         modifier = modifier,
         onClick = onClick,
