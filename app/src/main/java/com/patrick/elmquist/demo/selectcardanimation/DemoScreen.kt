@@ -38,9 +38,11 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import coil.compose.AsyncImage
 import com.patrick.elmquist.demo.selectcardanimation.model.CardModel
 import com.patrick.elmquist.demo.selectcardanimation.model.getCards
@@ -53,6 +55,9 @@ import kotlin.math.roundToInt
 @Composable
 internal fun DemoScreen(cards: List<CardModel>) {
     var selectedIndex by remember { mutableStateOf(SelectedIndex.NotInitiated) }
+    if (cards.isEmpty()) {
+        selectedIndex = SelectedIndex.NotInitiated
+    }
 
     val screenHeight = getScreenHeight()
     val density = LocalDensity.current
@@ -105,6 +110,25 @@ internal fun DemoScreen(cards: List<CardModel>) {
         .onSizeChanged { boxHeight = it.height }
         .padding(top = topSpacing)) {
         cardsAndOffsets.entries.forEachIndexed { i, (model, offset) ->
+            val offsetY = when (selectedIndex) {
+                SelectedIndex.NotInitiated -> {
+                    i * 40.dp
+                }
+
+                SelectedIndex.NotSelected -> {
+                    i * 40.dp
+                }
+
+                else -> {
+                    val isSelected = selectedIndex.index == i
+
+                    if (isSelected) {
+                        0.dp
+                    } else {
+                        CompressedStackOffset + i * 40.dp
+                    }
+                }
+            }
             Card(
                 model = model,
                 showDetails = selectedIndex.index != i,
@@ -120,7 +144,8 @@ internal fun DemoScreen(cards: List<CardModel>) {
                     .fillMaxWidth()
                     .aspectRatio(1f)
                     .onSizeChanged { cardHeight = it.height }
-                    .offset { IntOffset(x = 0, offset.value.roundToInt()) },
+                    .offset(y = offsetY),
+//                    .offset { IntOffset(x = 0, offset.value.roundToInt()) },
             )
         }
     }
@@ -182,46 +207,58 @@ private fun Card(
         modifier = modifier,
         onClick = onClick,
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier.padding(16.dp).height(24.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                val smallImage = Modifier.padding(end = 12.dp).size(24.dp)
-                AnimatedVisibility(showDetails) {
-                    if (LocalInspectionMode.current) {
-                        Box(modifier = smallImage.background(color = Color.LightGray))
-                    } else {
-                        AsyncImage(
-                            model = model.url,
-                            modifier = smallImage,
-                            contentDescription = null,
-                        )
-                    }
-                }
-
-                Text(
-                    text = model.title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.54f),
-                )
-            }
-            val modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 24.dp)
-                .aspectRatio(1f)
-                .fillMaxWidth()
-            if (LocalInspectionMode.current) {
-                Box(modifier = modifier.background(color = Color.LightGray))
-            } else {
-                AsyncImage(
-                    model = model.url,
-                    modifier = modifier,
-                    contentDescription = null,
-                )
-            }
+        val background = if (LocalInspectionMode.current) {
+            Color.LightGray
+        } else {
+            Color.Transparent
         }
+        Column(modifier = Modifier.fillMaxWidth()) {
+//            AnimatedVisibility(showDetails) {
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .height(24.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+//                    AsyncImage(
+//                        model = model.url,
+//                        modifier = Modifier
+//                            .padding(end = 12.dp)
+//                            .size(24.dp)
+//                            .background(background),
+//                        contentDescription = null,
+//                    )
+
+                    Text(
+                        text = model.title,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.54f),
+                    )
+                }
+            }
+//            AnimatedVisibility(!showDetails) {
+//                Text(
+//                    text = model.title,
+//                    style = MaterialTheme.typography.headlineMedium,
+//                    color = Color.White,
+//                    textAlign = TextAlign.Center,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 24.dp, vertical = 8.dp)
+//                )
+//            }
+//            AsyncImage(
+//                model = model.url,
+//                modifier = Modifier
+//                    .align(Alignment.CenterHorizontally)
+//                    .padding(horizontal = 24.dp)
+//                    .padding(bottom = 24.dp)
+//                    .aspectRatio(1f)
+//                    .fillMaxWidth()
+//                    .background(background),
+//                contentDescription = null,
+//            )
+//        }
     }
 }
 

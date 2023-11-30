@@ -13,14 +13,15 @@ internal data class CardModel(
 internal fun getCards(count: Int): List<CardModel> {
     return List(count) { i ->
         CardModel(
-            title = urls[i].let { url ->
-                val index = url.lastIndexOf('/')
-                url.substring(index + 1).drop(4).removeSuffix(".png")
-            },
+            title = "Card #${i + 1}",
+//            title = urls[i].let { url ->
+//                val index = url.lastIndexOf('/')
+//                url.substring(index + 1).drop(4).removeSuffix(".png")
+//            },
             backgroundColor = colors[i],
             url = urls[i],
         )
-    }.reversed()
+    }
 }
 
 val colors = listOf(
@@ -29,7 +30,7 @@ val colors = listOf(
     Color(0xe9, 0xc4, 0x6a),
     Color(0xf4, 0xa2, 0x61),
     Color(0xe7, 0x6f, 0x51),
-)
+).reversed()
 
 val urls = listOf(
     "https://archives.bulbagarden.net/media/upload/f/fb/0001Bulbasaur.png",
@@ -37,4 +38,4 @@ val urls = listOf(
     "https://archives.bulbagarden.net/media/upload/4/4a/0025Pikachu.png",
     "https://archives.bulbagarden.net/media/upload/2/27/0004Charmander.png",
     "https://archives.bulbagarden.net/media/upload/3/38/0006Charizard.png"
-)
+).reversed()
