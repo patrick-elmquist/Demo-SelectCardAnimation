@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             DemoSelectCardAnimationTheme() {
                 Surface {
-                    DemoScreen(getCards(5))
+                    DemoScreen2(getCards(5))
                 }
             }
         }
